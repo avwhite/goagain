@@ -1,0 +1,4 @@
+[package]
+name = "goagain"
+version = "0.1.0"
+authors = ["Andreas Vinter-Hviid <andreas.vinterhviid@gmail.com>"]
