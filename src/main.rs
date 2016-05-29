@@ -13,7 +13,7 @@ fn draw_board(w : &gtk::DrawingArea, ctx : &cairo::Context) -> Inhibit {
         w.get_allocated_height(),
         w.get_allocated_width()
     ) as f64;
-    ctx.set_source_rgb(0.0, 0.0, 0.0);
+    ctx.set_source_rgb(0.78, 0.86, 0.52);
     ctx.rectangle((width - s)/2.0, (height-s)/2.0, s, s);
     ctx.fill();
     Inhibit(false)
