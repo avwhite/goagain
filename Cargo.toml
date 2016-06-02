@@ -6,6 +6,7 @@ doc = false
 
 [dependencies]
 cairo-rs = "0.0.8"
+gdk = "0.3.0"
 
 [dependencies.gtk]
 version = "0.0.7"

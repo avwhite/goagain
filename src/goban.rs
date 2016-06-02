@@ -3,7 +3,7 @@ const BOARD_SIZE: usize = 19;
 pub type Bpos = u32;
 
 #[derive(Copy, Clone)]
-enum Intersection {
+pub enum Intersection {
 	Empty,
 	Black,
 	White,
@@ -35,8 +35,8 @@ impl Player {
 
     fn to_intersection(&self) -> Intersection {
         match *self {
-            Player::Black => Intersection::White,
-            Player::White => Intersection::Black,
+            Player::Black => Intersection::Black,
+            Player::White => Intersection::White,
         }
     }
 }
@@ -57,13 +57,22 @@ impl GameState {
 		}
 	}
 
-	fn make_move(&self, row : Bpos, column : Bpos) -> GameState {
+	pub fn make_move(&self, row : Bpos, column : Bpos) -> GameState {
         let mut g = self.clone();
         let place : usize = (row * self.size + column) as usize;
 		g.board[place] = self.turn.to_intersection();
         g.turn = self.turn.other();
-        return g
+        return g;
 	}
+
+    pub fn size(&self) -> u32 {
+        self.size
+    }
+
+    pub fn intersection(&self, row : Bpos, column: Bpos) -> Intersection {
+        let place : usize = (row * self.size + column) as usize;
+        return self.board[place];
+    }
 }
 
 impl ToString for GameState {
@@ -83,20 +92,29 @@ impl ToString for GameState {
 	}
 }
 
-pub struct Game {
-    pub states : Vec<GameState>,
+pub struct GameModel {
+    states : Vec<GameState>,
+    current_state : usize,
 }
 
-impl Game {
-    pub fn new() -> Game {
+impl GameModel {
+    pub fn new() -> GameModel {
         let states = vec![GameState::new(19)];
-        Game{ states : states }
+        GameModel{
+            states : states,
+            current_state : 0,
+        }
     }
 
     pub fn make_move(&mut self, row : Bpos, column : Bpos) {
         //states should always be non empty, so unwrap should be okay.
         let new_state = self.states.last().unwrap().make_move(row, column);
         self.states.push(new_state);
+        self.current_state = self.states.len() - 1;
+    }
+
+    pub fn current_state(&self) -> &GameState {
+        let i = self.current_state;
+        &self.states[i]
     }
 }
-
