@@ -122,4 +122,15 @@ impl GameModel {
         let i = self.current_state;
         &self.states[i]
     }
+
+    pub fn forwards(&mut self, delta : usize) {
+        let proposed_state = self.current_state + delta;
+        if (proposed_state < self.states.len()) {
+            self.current_state = proposed_state;
+        }
+    }
+
+    pub fn backwards(&mut self, delta : usize) {
+        self.current_state = self.current_state.saturating_sub(delta);
+    }
 }

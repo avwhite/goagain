@@ -138,6 +138,8 @@ fn main() {
     let builder = gtk::Builder::new_from_file("interface.glade");
     let window : gtk::Window = builder.get_object("window1").unwrap();
     let board : gtk::DrawingArea = builder.get_object("drawingarea1").unwrap();
+    let but_forwards : gtk::Button = builder.get_object("but_forwards").unwrap();
+    let but_backwards : gtk::Button = builder.get_object("but_backwards").unwrap();
     //256 is BUTTON_PRESS_MASK. It was easier to find the constant value in
     //the source code of some system crate on github than finding a name for
     //the mask in the documentation...
@@ -157,6 +159,20 @@ fn main() {
     let click_gm = gm.clone();
     board.connect_button_press_event(move |ref da, ref event| {
         click_board(da, event, click_gm.borrow_mut().deref_mut())
+    });
+
+    let backwards_gm = gm.clone();
+    let backwards_da = board.clone();
+    but_backwards.connect_clicked(move |_| {
+        backwards_gm.borrow_mut().deref_mut().backwards(1);
+        backwards_da.queue_draw();
+    });
+
+    let forwards_gm = gm.clone();
+    let forwards_da = board.clone();
+    but_forwards.connect_clicked(move |_| {
+        forwards_gm.borrow_mut().deref_mut().forwards(1);
+        forwards_da.queue_draw();
     });
 
     window.show_all();
