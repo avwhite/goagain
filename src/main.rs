@@ -64,7 +64,7 @@ fn draw_board(w : &gtk::DrawingArea, ctx : &cairo::Context, g : &goban::GameStat
     let stone_radius = line_diff/2.0 - (line_diff/50.0);
     for i in 0..lines {
         for j in 0..lines {
-            match g.intersection(i,j) {
+            match g.intersection((i,j)) {
                 goban::Intersection::Black => {
                     ctx.set_source_rgb(0.0, 0.0, 0.0);
                     ctx.arc(
@@ -121,7 +121,7 @@ fn click_board(w : &gtk::DrawingArea, event : &gdk::EventButton, g : &mut goban:
     let coord_y = (click_board_y/line_diff).round() as u32;
 
     if coord_x < lines && coord_y < lines {
-        g.make_move(coord_x, coord_y);
+        g.make_move((coord_x, coord_y));
         w.queue_draw();
     }
 
@@ -145,10 +145,8 @@ fn main() {
 
     let gm : Rc<RefCell<goban::GameModel>> =
         Rc::new(RefCell::new(goban::GameModel::new()));
-    gm.borrow_mut().make_move(2,2);
-    gm.borrow_mut().make_move(3,2);
-    gm.borrow_mut().make_move(3,3);
-    gm.borrow_mut().make_move(2,3);
+    gm.borrow_mut().make_move((2,2));
+    gm.borrow_mut().make_move((3,2));
 
     //We create a reference which the draw closure can own.
     let draw_gm = gm.clone();

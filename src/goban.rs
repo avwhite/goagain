@@ -1,6 +1,11 @@
 const BOARD_SIZE: usize = 19;
 
-pub type Bpos = u32;
+pub type Bpos = (u32, u32);
+
+//fn neighbors(size : Bpos, row : Bpos, column : Bpos) -> Vec<(Bpos, Bpos)> {
+//    let up = (row - 1, column);
+//    if (
+//}
 
 #[derive(Copy, Clone)]
 pub enum Intersection {
@@ -57,9 +62,9 @@ impl GameState {
 		}
 	}
 
-	pub fn make_move(&self, row : Bpos, column : Bpos) -> GameState {
+	pub fn make_move(&self, pos : Bpos) -> GameState {
         let mut g = self.clone();
-        let place : usize = (row * self.size + column) as usize;
+        let place : usize = (pos.0 * self.size + pos.1) as usize;
 		g.board[place] = self.turn.to_intersection();
         g.turn = self.turn.other();
         return g;
@@ -69,8 +74,8 @@ impl GameState {
         self.size
     }
 
-    pub fn intersection(&self, row : Bpos, column: Bpos) -> Intersection {
-        let place : usize = (row * self.size + column) as usize;
+    pub fn intersection(&self, pos : Bpos) -> Intersection {
+        let place : usize = (pos.0 * self.size + pos.1) as usize;
         return self.board[place];
     }
 }
@@ -106,9 +111,9 @@ impl GameModel {
         }
     }
 
-    pub fn make_move(&mut self, row : Bpos, column : Bpos) {
+    pub fn make_move(&mut self, pos : Bpos) {
         //states should always be non empty, so unwrap should be okay.
-        let new_state = self.states.last().unwrap().make_move(row, column);
+        let new_state = self.states.last().unwrap().make_move(pos);
         self.states.push(new_state);
         self.current_state = self.states.len() - 1;
     }
