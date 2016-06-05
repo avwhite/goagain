@@ -121,8 +121,10 @@ fn click_board(w : &gtk::DrawingArea, event : &gdk::EventButton, g : &mut goban:
     let coord_y = (click_board_y/line_diff).round() as u32;
 
     if coord_x < lines && coord_y < lines {
-        g.make_move((coord_x, coord_y));
-        w.queue_draw();
+        match g.make_move((coord_x, coord_y)) {
+            Ok(_) => w.queue_draw(),
+            Err(x) => println!("Error: {}", x)
+        }
     }
 
     Inhibit(false)
@@ -147,8 +149,6 @@ fn main() {
 
     let gm : Rc<RefCell<goban::GameModel>> =
         Rc::new(RefCell::new(goban::GameModel::new()));
-    gm.borrow_mut().make_move((2,2));
-    gm.borrow_mut().make_move((3,2));
 
     //We create a reference which the draw closure can own.
     let draw_gm = gm.clone();
